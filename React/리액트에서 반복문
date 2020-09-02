@@ -1,0 +1,59 @@
+# 리액트에서 배열 & 반복문쓰기 
+
+- 리액트는 state가 변경됨을 감지하고 렌더링을 한다.
+- 따라서 state에 배열이 들어가 있는 경우 해당 **배열이 변경 되었을 때** 렌더링을 한다. 
+- 따라서 push와 같은 배열 메서드를 사용하여 state 배열을 수정하는 경우 리액트는 배열이 바뀌었음을 감지하지 못한다.
+
+### 리액트에서 배열에 새로운 요소 추가하기
+
+```javascript
+this.setState({array:[...this.state.array,1]});
+```
+
+
+
+### 리액트에서 map 메서드 사용하기
+
+- push와 마찬가지로, splice, unshift, pop 같은 내장함수는 배열 자체를 직접 수정하게 되므로 사용할 수 없다. 따라서 기존 배열에 기반하여 새 배열을 만들어내는 concat, slice, map, filter 같은 함수를 사용해야한다.
+- **map 을 이용하여 특정 컴포넌트를 반복할 수 있다**
+  - 예를들어 li 태그를 반복해야 할때 우리는 li 태그를 따로 컴포넌트화 하여 바깥으로 빼줄 수 있다. 그리고 해당 컴포넌트를 반복할 수 있다.
+
+```html
+import List from './List.jsx';
+<ul>
+    {this.state.array.map(v,i)=>{
+    	return <List key={v+i} value={v}/> 
+    }}
+</ul>
+
+// List 컴포넌트 
+
+class List extends Component{
+	render(){
+		return(
+			<li>
+                <div>{this.props.value}</div>
+			</li>
+		)
+}
+}
+```
+
+- 컴포넌트를 렌더링 할 때 props 넣어주기
+  - List 컴포넌트 입장에서는 value를 알 수 없다 . 따라서 해당 컴포넌트를 가져올 때, props 값으로 넣어주면 , 해당 컴포넌트에서도 props를 통해 해당 변수에 접근 할 수 있다. 
+- What is Key?
+  - Key는 엘리먼트 리스트를 만들 때 포함해야 하는 특수한 문자 어트리뷰트이다.
+  - key는 리액트가 **어떤 항목을 변경, 추가 또는 삭제할지 식별할 것을 돕는다**. key는 엘리먼트에 안정적인 고유성을 부여하기 위하여 배열 내부의 엘리먼트에 지정해야한다.
+  - Key는 리스트의 다른 항목들 사이에서 해당 항목을 고유하게 식별할 수 있는 문자열을 사용해야한다. 
+  - map에서 index항목은 key로 사용하는 것을 권장하지 않는다! 특히 리스트가 수정될 가능성이 있는 경우 더욱 그러하다.
+  - 대부분의 경우 data의 안정적이고 고유한 id를 key로 삼는다. 
+  - key는 형제사이에서만 고유한 값이면 된다.
+
+```javascript
+const todoItems = todos.map((todo) =>
+  <li key={todo.id}>
+    {todo.text}
+  </li>
+);
+```
+
